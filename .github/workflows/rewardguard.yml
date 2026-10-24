@@ -6,10 +6,11 @@ on:
 
 jobs:
   rewardguard:
-    uses: Advanced-Digital-Marketing-LTDA/workflows/.github/workflows/rewardguard.yml@90211def07592394c8459328eeceaacc01729b10 # published content review
+    uses: Advanced-Digital-Marketing-LTDA/workflows/.github/workflows/rewardguard.yml@66d005ae6105310cbd4ef9c9395e26f51350e94f # automatic evidence and individual content checks
     permissions:
       contents: read
       pull-requests: write
+      checks: write
     with:
       run-tests: false
       node-version: '24'
