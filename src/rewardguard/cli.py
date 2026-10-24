@@ -94,6 +94,7 @@ def check(args) -> int:
         base, head, cfg = _resolve(repo, args)
     except RewardGuardError as e:
         rep.errors.append(str(e))
+        rep.content = {"status": "error", "coverage": [], "reason": "Review preflight failed: " + str(e)}
         return _finish(rep, args)
 
     if getattr(args, "staged", False):
@@ -107,6 +108,7 @@ def check(args) -> int:
     changed = gitops.changed_files(repo, base, head)
     if not changed:
         rep.notes.append("No changes between base and head.")
+        rep.content = {"status": "skipped", "coverage": [], "reason": "No changes between base and head."}
         return _finish(rep, args)
 
     # Content reads only Git objects and trusted-base evidence. Its gate precedes

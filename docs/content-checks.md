@@ -841,3 +841,11 @@ This document defines the selected scope and integration contract; it does not c
 CI rollout requires publishing the RewardGuard/action changes and pinning consumers to the resulting **published action commit SHA**. A local checkout or an older published action SHA does not deploy this content path. The reusable workflow must preserve the no-secrets test job and the secret-bearing judge job; the judge never executes proposed branch code. Caller-by-caller organization rollout is a separate step.
 
 Unavailable linked references are listed in the source audits and supplied no unseen criteria. Missing live crawl, analytics, platform-profile, visual or runtime evidence remains `not_evaluated`; the content reviewer does not manufacture it.
+
+## Automatic evidence and individual CI checks
+
+RewardGuard discovers relevant guidance, product documentation, local skill sections, nearby source, imports, file inventories and Git history from repository Git objects. Product facts retain their source revision and remain repository assertions. Source-only rule alternatives cover bounded literal observations; source templates do not establish rendered behavior.
+
+Jev selects applicable rules before deciding which evidence is needed. Unrelated rules are recorded as not applicable. Each applicable rule then receives a target-specific readiness check; a generic document or old observation cannot establish missing facts. Relevant evidence gaps identify the information actually needed for the changed instance. Full source provenance and bounded-collection omissions are included in JSON.
+
+In CI, `contentguard / eligibility` and individual `contentguard / CG_…` checks appear in GitHub Checks. Warnings and evidence gaps are neutral, failures use the existing 0.80 threshold, and successful rule checks cover only their stated evaluated scopes. The caller and judge need `checks: write` in addition to their existing permissions. See [automatic evidence collection](content-evidence.md).

@@ -45,7 +45,7 @@ def test_no_tests_workflow():
     assert "push" in _triggers(wf)
     assert list(wf["jobs"]) == ["rewardguard-base", "rewardguard"]
     job = wf["jobs"]["rewardguard"]
-    assert job["permissions"] == {"contents": "read", "pull-requests": "write"}
+    assert job["permissions"] == {"contents": "read", "pull-requests": "write", "checks": "write"}
 
     checkout = _step(job, "actions/checkout")["with"]
     assert checkout["ref"] == RESOLVED_HEAD
@@ -78,7 +78,7 @@ def test_two_job_workflow_keeps_secrets_away_from_branch_code():
     # check job holds the secrets and must still report when the tests job fails
     assert check_job["needs"] == ["rewardguard-base", "rewardguard-tests"]
     assert "!cancelled()" in check_job["if"]
-    assert check_job["permissions"] == {"contents": "read", "pull-requests": "write"}
+    assert check_job["permissions"] == {"contents": "read", "pull-requests": "write", "checks": "write"}
     assert _step(check_job, "actions/checkout")["with"]["ref"] == RESOLVED_HEAD
     assert _step(check_job, "actions/checkout")["with"]["persist-credentials"] is False
     guard = _guard(check_job)["with"]
@@ -223,7 +223,7 @@ def test_resolver_fetches_a_missing_ref_as_a_commit(rel, action_repo, tmp_path):
 def test_action_uses_resolved_commits_for_both_test_and_check_commands(tmp_path):
     action = _load("action.yml")
     steps = action["runs"]["steps"]
-    executable = tmp_path / "rewardguard"
+    executable = tmp_path / "python"
     executable.write_text("#!/usr/bin/env python3\nimport json, os, pathlib, sys\n"
                           "with open(os.environ['CALL_LOG'], 'a') as f: f.write(json.dumps(sys.argv[1:]) + '\\n')\n"
                           "if '--markdown' in sys.argv: pathlib.Path(sys.argv[sys.argv.index('--markdown')+1]).write_text('report')\n")
@@ -242,6 +242,7 @@ def test_action_uses_resolved_commits_for_both_test_and_check_commands(tmp_path)
     calls = [json.loads(line) for line in log.read_text().splitlines()]
     assert len(calls) == 2
     for args in calls:
+        assert args[:3] == ["-I", "-m", "rewardguard.cli"]
         assert args[args.index("--base") + 1] == "a" * 40
         assert args[args.index("--head") + 1] == "b" * 40
     assert "--no-local-tests" in calls[1]

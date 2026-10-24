@@ -19,14 +19,17 @@
     "P": "Explicitly adopted editorial/artifact/current platform profile, with user overrides honored.",
     "I": "Sufficiently complete relevant route, page, product, locale or record inventory.",
     "S": "Inspectable supplied primary-source/proof/observation record with provenance and relevant scope; dates/freshness are required only when material to the particular claim.",
-    "R": "Resolved output or observed rendering/runtime evidence; unambiguous source can establish source-visible facts without running branch code.",
+    "R": "Resolved output or observed rendering/runtime evidence; raw templates alone do not establish effective output or runtime behavior. Literal source alternatives are explicitly identified with L.",
     "M": "Relevant inputs, formulas, measurement definitions, populations, periods and denominators.",
-    "H": "Dated historical/publication/version evidence."
+    "H": "Dated historical/publication/version evidence.",
+    "C": "Complete relevant artifact, record, page, output or support inventory is supplied; a patch fragment alone is insufficient.",
+    "L": "Literal observations from changed/enclosing source or its supplied base counterpart, only within the rule's explicit source_evidence guards. Does not establish execution, rendered state, external truth or repository completeness."
   },
   "rule_instance_contract": {
     "each_parameter": "One independently judged proposition per named field, term, requirement, record, or claim. Do not combine unrelated subtypes into one probability.",
     "missing_evidence": "not_evaluated with an explicit coverage reason; never an inferred failure or claimed pass.",
-    "haiku_context": "Only the instantiated rule's standalone bounded rubric, inline exclusions, relevant changed evidence, and minimum trusted context. Do not give raw guides with unsupported heuristics or refer Haiku to an unloaded audit."
+    "haiku_context": "Only the instantiated rule's standalone bounded rubric, inline exclusions, relevant changed evidence, and minimum trusted context. Do not give raw guides with unsupported heuristics or refer Haiku to an unloaded audit.",
+    "source_only": "L is available only for an instantiated subtype satisfying the rule's source_evidence guards. Preserve original evidence requirements for all other subtypes. A literal-source pass does not establish effective output/runtime correctness; absence of external evidence is never a defect by itself."
   },
   "source_map": [
     {
@@ -854,7 +857,7 @@
         {
           "id": "CG_AUDIENCE_TERM_GAP",
           "defect": "An essential term is undefined for the established audience or conflicts with its approved glossary.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "copy-editing",
           "haiku_skill_source": "skill://user/6ac92f6d05dc8191b2ec44f6e4435ea5/copy-editing/SKILL.md",
           "haiku_excerpt_focus": "An essential term is undefined for the established audience or conflicts with its approved glossary.",
@@ -862,12 +865,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a changed use that contradicts an explicit glossary/definition in the same complete source unit; audience familiarity and unstated glossary requirements still require B."
         },
         {
           "id": "CG_INSTRUCTION_GAP",
           "defect": "A required instruction omits an actor, dependency, or step that prevents the stated task.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "copy-editing",
           "haiku_skill_source": "skill://user/6ac92f6d05dc8191b2ec44f6e4435ea5/copy-editing/SKILL.md",
           "haiku_excerpt_focus": "A required instruction omits an actor, dependency, or step that prevents the stated task.",
@@ -875,7 +894,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an instruction whose required actor, dependency or step is explicitly established by the same complete source unit and whose omission prevents that stated task; do not infer an undocumented product flow."
         },
         {
           "id": "CG_INTERNAL_CONTRADICTION",
@@ -906,7 +941,7 @@
         {
           "id": "CG_VALUE_EXPLANATION_GAP",
           "defect": "A new or rewritten promotional unit fails to identify the actual product, task, or relevant outcome.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "copywriting",
           "haiku_skill_source": "skill://user/6ac92f6d05e48191a0b97c34de1c79db/copywriting/SKILL.md",
           "haiku_excerpt_focus": "A new or rewritten promotional unit fails to identify the actual product, task, or relevant outcome.",
@@ -914,7 +949,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete, literal promotional unit whose own explicit introduction/promise establishes the product or task it must explain; infer no product facts, audience requirements or unseen content."
         }
       ]
     },
@@ -958,7 +1009,7 @@
         {
           "id": "CG_PUBLIC_DRAFT_RESIDUE",
           "defect": "Publish-target content exposes an unresolved production placeholder or commissioning-chat wrapper.",
-          "evidence": "D+B (final state)",
+          "evidence": "D+B (final state); source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "humanizer",
           "haiku_skill_source": "skill://user/6ac51dbd56d48191a3ab648c72f18925/humanizer/SKILL.md",
           "haiku_excerpt_focus": "Publish-target content exposes an unresolved production placeholder or commissioning-chat wrapper.",
@@ -966,7 +1017,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal production placeholders or commissioning wrappers in an explicitly publish-target source unit; exclude deliberate examples, templates, quoted instructions and private draft comments. Final publication state is not inferred."
         }
       ]
     },
@@ -984,7 +1051,7 @@
         {
           "id": "CG_EDIT_UNSUPPORTED_ADDITION",
           "defect": "A style edit introduces a material factual assertion unsupported by the original or supplied evidence.",
-          "evidence": "D+B+S",
+          "evidence": "D+B+S; source-only alternative: D+B+L only within source_evidence guards",
           "haiku_skill": "humanizer",
           "haiku_skill_source": "skill://user/6ac51dbd56d48191a3ab648c72f18925/humanizer/SKILL.md",
           "haiku_excerpt_focus": "A style edit introduces a material factual assertion unsupported by the original or supplied evidence.",
@@ -992,12 +1059,30 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "B",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicitly bounded style-only edit with a supplied base counterpart and trusted preservation instruction, where a newly asserted material fact is absent from that complete original and all supplied support. This establishes an unsupported addition under that edit contract, never that the fact is false."
         },
         {
           "id": "CG_EDIT_DETAIL_LOSS",
           "defect": "An edit removes a supported detail the task required preserving.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+B+L only within source_evidence guards",
           "haiku_skill": "humanizer",
           "haiku_skill_source": "skill://user/6ac51dbd56d48191a3ab648c72f18925/humanizer/SKILL.md",
           "haiku_excerpt_focus": "An edit removes a supported detail the task required preserving.",
@@ -1005,12 +1090,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "B",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a supplied before/after edit with an explicit source-local preservation instruction and the supported detail visible in the base counterpart; do not infer that all removed content had to be retained."
         },
         {
           "id": "CG_EDIT_QUALIFIER_LOSS",
           "defect": "An edit removes a material condition, exception, uncertainty, or scope limitation.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "humanizer",
           "haiku_skill_source": "skill://user/6ac51dbd56d48191a3ab648c72f18925/humanizer/SKILL.md",
           "haiku_excerpt_focus": "An edit removes a material condition, exception, uncertainty, or scope limitation.",
@@ -1018,7 +1120,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a supplied before/after edit that removes a literal material condition, exception, uncertainty or scope qualifier from the same otherwise retained assertion; do not infer the truth of the underlying claim."
         },
         {
           "id": "CG_STYLE_SAMPLE_FACT_LEAK",
@@ -1036,7 +1154,7 @@
         {
           "id": "CG_PROTECTED_LITERAL_CHANGE",
           "defect": "A prose-only edit changes a protected command, code literal, data value, or destination without authorization.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+B+L only within source_evidence guards",
           "haiku_skill": "humanizer",
           "haiku_skill_source": "skill://user/6ac51dbd56d48191a3ab648c72f18925/humanizer/SKILL.md",
           "haiku_excerpt_focus": "A prose-only edit changes a protected command, code literal, data value, or destination without authorization.",
@@ -1044,12 +1162,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "B",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a supplied before/after edit with an explicit trusted prose-only/preserve-literals instruction, where the exact protected command, literal, value or destination is visible in both versions."
         },
         {
           "id": "CG_DOCUMENT_WORDING_PRESERVATION",
           "defect": "A formatting-only native-document edit changes wording that the request explicitly required preserving.",
-          "evidence": "D+B+before/after artifact text",
+          "evidence": "D+B+before/after artifact text; source-only alternative: D+B+L only within source_evidence guards",
           "haiku_skill": "google-drive:google-docs",
           "haiku_skill_source": "skill://plugin_connector_1p_ab21a553bfbc81919ea8fd1858e3ffa7/google-docs/SKILL.md",
           "haiku_excerpt_focus": "A formatting-only native-document edit changes wording that the request explicitly required preserving.",
@@ -1057,7 +1192,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "B",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only supplied before/after artifact text under an explicit trusted formatting-only/preserve-wording instruction; source markup changes alone do not prove native-document wording changed."
         }
       ]
     },
@@ -1088,7 +1240,7 @@
         {
           "id": "CG_QUOTE_FIDELITY",
           "defect": "An attributed or verbatim quotation materially changes the source meaning or speaker.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "An attributed or verbatim quotation materially changes the source meaning or speaker.",
@@ -1096,7 +1248,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an attributed/verbatim quotation and its complete explicitly identified literal source excerpt both supplied in the enclosing source/base counterpart, where their meanings/speakers directly differ; do not infer source authenticity, unseen quotations or unsupported external attribution."
         },
         {
           "id": "CG_ENDORSEMENT_RELATIONSHIP",
@@ -1133,18 +1301,16 @@
           "haiku_excerpt_focus": "A quantitative proof assertion misrepresents its support or omits support required by the artifact's evidence contract.",
           "evidence_paths": [
             {
-              "case": "misrepresented supplied support",
               "needs": [
                 "D",
                 "S"
               ]
             },
             {
-              "case": "required support omitted",
               "needs": [
                 "D",
                 "P",
-                "complete relevant artifact/support inventory"
+                "C"
               ]
             }
           ],
@@ -1157,7 +1323,7 @@
         {
           "id": "CG_SUPERLATIVE_BASIS",
           "defect": "A testable superiority claim omits or misstates the comparison measure and scope required to interpret it.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "copy-editing",
           "haiku_skill_source": "skill://user/6ac92f6d05dc8191b2ec44f6e4435ea5/copy-editing/SKILL.md",
           "haiku_excerpt_focus": "A testable superiority claim omits or misstates the comparison measure and scope required to interpret it.",
@@ -1165,7 +1331,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal, testable superiority assertion whose comparison measure or scope is necessary to interpret the assertion but absent from its complete claim/support unit; exclude subjective puffery and do not infer that a superiority claim is false or that unseen proof is absent."
         },
         {
           "id": "CG_EXPERIENCE_AUTHENTICITY",
@@ -1210,7 +1392,7 @@
         {
           "id": "CG_SOURCE_SCOPE_EXPANSION",
           "defect": "A conclusion exceeds the supplied source's population, market, period, segment, or version.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "A conclusion exceeds the supplied source's population, market, period, segment, or version.",
@@ -1219,12 +1401,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a source passage or evidence table supplied in full in the same source unit whose explicitly stated population, market, period, segment or version is exceeded by the changed conclusion; do not treat unsupplied linked sources as inspected."
         },
         {
           "id": "CG_INFERENCE_OVERSTATEMENT",
           "defect": "A hypothesis, source silence, correlation, or hypothetical result is promoted to established fact or causality.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "A hypothesis, source silence, correlation, or hypothetical result is promoted to established fact or causality.",
@@ -1233,7 +1431,23 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a changed conclusion that expressly turns a source-local, explicitly labeled hypothesis, correlation, hypothetical result or unobserved result into established fact/causality; the limiting evidence and the conclusion must both be supplied."
         },
         {
           "id": "CG_SOURCE_CURRENTNESS",
@@ -1252,7 +1466,7 @@
         {
           "id": "CG_SOURCE_INDEPENDENCE_COUNT",
           "defect": "Duplicated or overlapping observations are counted as independent support, or the stated denominator is wrong.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "Duplicated or overlapping observations are counted as independent support, or the stated denominator is wrong.",
@@ -1261,7 +1475,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only arithmetic or duplicate counting from the complete literal observations and explicitly supplied counting unit/denominator; independence not demonstrable from those records still requires S and M."
         },
         {
           "id": "CG_PERSONA_PROVENANCE",
@@ -1280,7 +1511,7 @@
         {
           "id": "CG_MATERIAL_CONTRADICTION_SUPPRESSED",
           "defect": "A synthesis asserts agreement while supplied relevant evidence contains a material contrary result.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "A synthesis asserts agreement while supplied relevant evidence contains a material contrary result.",
@@ -1289,12 +1520,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a synthesis claiming agreement while the complete same-scope source-local evidence it summarizes explicitly contains a contrary result; no claim about unseen research or its authenticity."
         },
         {
           "id": "CG_RESEARCH_DENOMINATOR_MISSING",
           "defect": "A research/win-loss claim omits its denominator or counting unit explicitly required by the selected evidence contract.",
-          "evidence": "D+P+complete relevant artifact",
+          "evidence": "D+P+complete relevant artifact; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "customer-research",
           "haiku_skill_source": "skill://user/6ac92f6d05f481918e771c1b62087599/customer-research/SKILL.md",
           "haiku_excerpt_focus": "A research/win-loss claim omits its denominator or counting unit explicitly required by the selected evidence contract.",
@@ -1303,12 +1550,30 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "C",
+                "D",
+                "P"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal research claim whose own explicitly adopted source-local evidence contract requires a named denominator/counting unit; an ordinary marketing claim has no inferred reporting contract."
         },
         {
           "id": "CG_CONTACT_FACT_CONFLICT",
           "defect": "A prospect/contact record states a factual contact detail contradicted by its supplied source or explicitly invents it as observed.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:link-prospecting",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/link-prospecting/SKILL.md",
           "haiku_excerpt_focus": "A prospect/contact record states a factual contact detail contradicted by its supplied source or explicitly invents it as observed.",
@@ -1317,7 +1582,23 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a contact record that explicitly labels a detail guessed/invented in its supplied provenance while the changed assertion labels that same detail observed; absence of an external source alone is not evidence of fabrication."
         }
       ]
     },
@@ -1360,7 +1641,7 @@
         {
           "id": "CG_BRIEF_OUTLINE_ACTIONABILITY",
           "defect": "A requested outline item lacks the concrete instruction or actual question needed by the writer.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "create-simple-seo-content-brief",
           "haiku_skill_source": "skill://user/6ac67cdc96508191858afceaf5ce573f/create-simple-seo-content-brief/SKILL.md",
           "haiku_excerpt_focus": "A requested outline item lacks the concrete instruction or actual question needed by the writer.",
@@ -1368,12 +1649,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal brief explicitly requesting an actionable outline where a named outline item lacks its requested instruction/question; do not invent a writer requirement."
         },
         {
           "id": "CG_KEYWORD_VALIDATION_OVERCLAIM",
           "defect": "Provisional terms or guessed metrics are presented as validated keyword research.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "create-simple-seo-content-brief",
           "haiku_skill_source": "skill://user/6ac67cdc96508191858afceaf5ce573f/create-simple-seo-content-brief/SKILL.md",
           "haiku_excerpt_focus": "Provisional terms or guessed metrics are presented as validated keyword research.",
@@ -1381,7 +1678,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a changed validation claim contradicting an explicit same-unit record labeling those exact terms/metrics provisional, guessed or unvalidated; absence of external research alone does not establish fabrication."
         },
         {
           "id": "CG_STRATEGY_PAGE_MAPPING",
@@ -1399,7 +1712,7 @@
         {
           "id": "CG_STRATEGY_SCORE_ARITHMETIC",
           "defect": "A priority total or ranking does not follow the stated weights and inputs.",
-          "evidence": "D+M",
+          "evidence": "D+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "content-strategy",
           "haiku_skill_source": "skill://user/6ac92f6d05d88191a81cc1d397f47b27/content-strategy/SKILL.md",
           "haiku_excerpt_focus": "A priority total or ranking does not follow the stated weights and inputs.",
@@ -1407,7 +1720,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only arithmetic/ranking derived from all necessary literal weights, inputs, tie rules and formula in the supplied source; do not assume missing weights or validate underlying research."
         },
         {
           "id": "CG_STRATEGY_RESEARCH_TRACE",
@@ -1479,7 +1808,7 @@
         {
           "id": "CG_PUBLICATION_MODULE_CONTRACT",
           "defect": "A complete publication omits a required author/bio/summary/FAQ module or adds one explicitly prohibited for that page type.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "plan-seo-geo-growth",
           "haiku_skill_source": "skill://user/6ac4f4934c608191a85711765895945d/plan-seo-geo-growth/SKILL.md",
           "haiku_excerpt_focus": "A complete publication omits a required author/bio/summary/FAQ module or adds one explicitly prohibited for that page type.",
@@ -1488,7 +1817,26 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "C",
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal static publication with no generated/inherited content, checked against its supplied adopted required/prohibited module contract; template/module absence is not effective-page absence."
         },
         {
           "id": "CG_PUBLICATION_DATE_INTEGRITY",
@@ -1507,7 +1855,7 @@
         {
           "id": "CG_READING_TIME_CONTRACT",
           "defect": "Displayed reading time contradicts the adopted calculation on the final reader text.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "create-simple-seo-content-brief",
           "haiku_skill_source": "skill://user/6ac67cdc96508191858afceaf5ce573f/create-simple-seo-content-brief/SKILL.md",
           "haiku_excerpt_focus": "Displayed reading time contradicts the adopted calculation on the final reader text.",
@@ -1516,12 +1864,30 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only complete final literal reader text and a literal displayed reading time, using the supplied adopted word-count/rate/rounding contract; dynamically included text and effective output remain unavailable."
         },
         {
           "id": "CG_EXTERNAL_LINK_POLICY",
           "defect": "A changed external link violates the adopted target/rel policy for its actual relationship.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "plan-seo-geo-growth",
           "haiku_skill_source": "skill://user/6ac4f4934c608191a85711765895945d/plan-seo-geo-growth/SKILL.md",
           "haiku_excerpt_focus": "A changed external link violates the adopted target/rel policy for its actual relationship.",
@@ -1530,7 +1896,25 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal external anchor whose target/rel attributes and actual relationship are explicit in source, evaluated against a supplied adopted policy. No redirect, destination availability or runtime attribute changes are inferred."
         }
       ]
     },
@@ -1557,12 +1941,20 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "B"
+              ]
+            }
           ]
         },
         {
           "id": "CG_SEARCH_ANSWER_COVERAGE",
           "defect": "The complete answer omits information necessary for its explicit question or stated task.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "The complete answer omits information necessary for its explicit question or stated task.",
@@ -1571,7 +1963,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "C",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit question/stated task in the same complete literal answer unit whose necessary answer component is demonstrably absent; external search intent and product requirements are outside this alternative."
         },
         {
           "id": "CG_SEARCH_KEYWORD_STUFFING",
@@ -1590,7 +1999,7 @@
         {
           "id": "CG_ANSWER_QUALIFIER_LOSS",
           "defect": "An extractable answer loses a necessary subject, unit, condition, or referent and conveys a misleading standalone claim.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "ai-seo",
           "haiku_skill_source": "skill://user/6ac92f6d05808191abb1d6c36eeb07cd/ai-seo/SKILL.md",
           "haiku_excerpt_focus": "An extractable answer loses a necessary subject, unit, condition, or referent and conveys a misleading standalone claim.",
@@ -1599,7 +2008,23 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal extractable answer and its complete surrounding source/base assertion where a necessary subject, unit, condition or referent is explicitly present but omitted from that extract; do not infer unseen search extraction."
         },
         {
           "id": "CG_ONEPAGE_URL_SCOPE",
@@ -1630,7 +2055,7 @@
         {
           "id": "CG_META_EFFECTIVE_TITLE",
           "defect": "A public page required to have a search title resolves to an absent or empty title.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A public page required to have a search title resolves to an absent or empty title.",
@@ -1638,12 +2063,30 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete static HTML document with an explicit adopted title requirement and no generated/inherited head, where its literal title is absent/empty; component/template source alone cannot establish effective title absence."
         },
         {
           "id": "CG_META_PROMISE_CONFLICT",
           "defect": "A changed title, description, H1, or social preview materially misrepresents the actual page or approved offer.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A changed title, description, H1, or social preview materially misrepresents the actual page or approved offer.",
@@ -1651,12 +2094,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal title/description/H1/social-preview text that contradicts literal page copy or a literal offer in the same enclosing source; no dynamic interpolation, layout override or external product truth is resolved."
         },
         {
           "id": "CG_META_TEMPLATE_RECORD",
           "defect": "A metadata template exposes unresolved tokens, the wrong record/locale, or identical labels that hide required distinctions.",
-          "evidence": "D+I+R",
+          "evidence": "D+I+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A metadata template exposes unresolved tokens, the wrong record/locale, or identical labels that hide required distinctions.",
@@ -1664,12 +2124,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "I",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal metadata label that visibly names a different record/locale than an explicit same-unit record identifier, or a literal unresolved production token in an explicitly final metadata field; do not evaluate generated record sets or framework interpolation as output."
         },
         {
           "id": "CG_META_PREVIEW_CONTRACT",
           "defect": "A required social preview or metadata field is absent, wrong, or unusable in the effective artifact.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "site-bootstrap-adm",
           "haiku_skill_source": "skill://user/6ac5314b40a08191b208994ce42f7184/site-bootstrap-adm/SKILL.md",
           "haiku_excerpt_focus": "A required social preview or metadata field is absent, wrong, or unusable in the effective artifact.",
@@ -1677,7 +2154,25 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit literal metadata field/value in a complete static metadata unit, checked against the supplied adopted field contract; absence across inherited/generated heads and actual preview usability require R."
         }
       ]
     },
@@ -1707,7 +2202,7 @@
         {
           "id": "CG_LINK_FRAGMENT",
           "defect": "A changed fragment link has no matching target in the effective destination.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "site-architecture",
           "haiku_skill_source": "skill://user/6ac92f6d06d08191bed2dcae98137742/site-architecture/SKILL.md",
           "haiku_excerpt_focus": "A changed fragment link has no matching target in the effective destination.",
@@ -1715,12 +2210,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal same-document fragment in a complete static HTML artifact with the entire target document supplied and no injected/generated target IDs; framework templates and partial components do not establish target absence."
         },
         {
           "id": "CG_LINK_ACCESSIBLE_NAME",
           "defect": "A meaningful link loses the accessible name needed to understand its purpose.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "site-architecture",
           "haiku_skill_source": "skill://user/6ac92f6d06d08191bed2dcae98137742/site-architecture/SKILL.md",
           "haiku_excerpt_focus": "A meaningful link loses the accessible name needed to understand its purpose.",
@@ -1728,7 +2239,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal meaningful anchor whose visible purpose is established in the enclosing source and which has no literal text, accessible label, labelled-by target or named image child; components, spreads, interpolation, CSS-generated content, and externally supplied names make this alternative unavailable."
         },
         {
           "id": "CG_REDIRECT_INTENT",
@@ -1927,7 +2454,7 @@
         {
           "id": "CG_CANONICAL_CONFLICT",
           "defect": "Effective canonical declarations for the same page contradict one another.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "Effective canonical declarations for the same page contradict one another.",
@@ -1935,12 +2462,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only two or more contradictory literal canonical declarations in the same source head/unit that are unconditionally co-present; exclude conditional branches, inherited layouts, generator output and declarations across different documents."
         },
         {
           "id": "CG_SITEMAP_SYNTAX",
           "defect": "A changed sitemap is malformed or contains unresolved locations that prevent its intended use.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A changed sitemap is malformed or contains unresolved locations that prevent its intended use.",
@@ -1948,7 +2491,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal XML sitemap artifact with a directly visible serialization error or literal unresolved production location; template/generator source and dynamically constructed values still require R."
         },
         {
           "id": "CG_SITEMAP_ELIGIBILITY",
@@ -1979,7 +2538,7 @@
         {
           "id": "CG_CANONICAL_OUTPUT_INVALID",
           "defect": "An emitted canonical is empty, unresolved, or malformed in the effective output.",
-          "evidence": "D+R; P when validity depends on the consumer profile",
+          "evidence": "D+R; P when validity depends on the consumer profile; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "An emitted canonical is empty, unresolved, or malformed in the effective output.",
@@ -1987,12 +2546,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal canonical href in an unconditional source head declaration that is empty, malformed or a literal unresolved production placeholder. Framework expressions are not literal output, and consumer-dependent validity still requires P."
         },
         {
           "id": "CG_CANONICAL_REQUIRED_PRESENCE",
           "defect": "A canonical required by the adopted duplicate-URL/publication strategy is absent from the complete effective output.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A canonical required by the adopted duplicate-URL/publication strategy is absent from the complete effective output.",
@@ -2000,7 +2575,26 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "C",
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete static HTML document with no inherited/generated head, checked against its supplied adopted canonical-presence strategy; component/template source does not establish effective declaration absence."
         }
       ]
     },
@@ -2017,7 +2611,7 @@
         {
           "id": "CG_LOCALE_CODE",
           "defect": "An implemented language/region code is invalid under the selected current profile.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "seo-audit",
           "haiku_skill_source": "skill://user/6ac92f6d06c08191a0135dbb12324cda/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "An implemented language/region code is invalid under the selected current profile.",
@@ -2026,7 +2620,25 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal language/region code in a source declaration, evaluated against the supplied current adopted code profile; dynamic output and actual language/destination are outside this alternative."
         },
         {
           "id": "CG_LOCALE_CLUSTER",
@@ -2099,7 +2711,7 @@
         {
           "id": "CG_SCHEMA_SYNTAX",
           "defect": "Changed structured data is not validly serialized in its actual output format.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "Changed structured data is not validly serialized in its actual output format.",
@@ -2108,12 +2720,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only malformed literal JSON inside a literal application/ld+json script or a complete static structured-data file. Exclude interpolation, serialized objects, generator functions and framework expressions; source syntax does not establish generated output validity."
         },
         {
           "id": "CG_SCHEMA_PROFILE",
           "defect": "One required property, vocabulary use, type, or value violates the selected current consumer/schema profile.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "One required property, vocabulary use, type, or value violates the selected current consumer/schema profile.",
@@ -2122,12 +2750,30 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal structured-data record whose explicit types/properties/values can be checked against a supplied current adopted schema/consumer profile; exclude generated/interpolated values and runtime visibility/eligibility."
         },
         {
           "id": "CG_SCHEMA_FACT_CONFLICT",
           "defect": "Markup materially contradicts the actual entity, visible content, approved offer, or verified proof.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "Markup materially contradicts the actual entity, visible content, approved offer, or verified proof.",
@@ -2136,12 +2782,29 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal structured-data fact that contradicts an explicit literal fact about the same entity/offer in the same enclosing source unit; truth of external product/proof claims and generated markup still requires the original evidence."
         },
         {
           "id": "CG_SCHEMA_GRAPH_IDENTITY",
           "defect": "Graph references merge unrelated entities or leave a required relationship unresolved.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "Graph references merge unrelated entities or leave a required relationship unresolved.",
@@ -2150,12 +2813,29 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal graph IDs/references in a complete same-unit static graph where explicit entity identifiers establish an incompatible merge or a required relationship points to an absent local graph node; external references and generated graphs remain unavailable."
         },
         {
           "id": "CG_SCHEMA_GENERATOR_CONFLICT",
           "defect": "Effective generators emit inconsistent material facts for the same entity.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "Effective generators emit inconsistent material facts for the same entity.",
@@ -2164,7 +2844,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only contradictory literal material facts about an explicitly identical entity in two unconditionally co-present structured-data blocks in the same source unit; do not infer invocation, combined generator output or external entity truth."
         },
         {
           "id": "CG_SCHEMA_APPEARANCE_CLAIM",
@@ -2183,7 +2880,7 @@
         {
           "id": "CG_SCHEMA_VISIBLE_CONTENT_REQUIREMENT",
           "defect": "Markup describes content absent from the complete page where the selected current consumer requires that content to be visible.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "schema",
           "haiku_skill_source": "skill://user/6ac92f6d06b88191aa3b24acc3c35935/schema/SKILL.md",
           "haiku_excerpt_focus": "Markup describes content absent from the complete page where the selected current consumer requires that content to be visible.",
@@ -2192,7 +2889,26 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "C",
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete static literal page and static literal markup with no generated/inherited page content, checked against the supplied adopted current visible-content requirement; do not infer CSS visibility, dynamic output or actual consumer eligibility."
         }
       ]
     },
@@ -2209,7 +2925,7 @@
         {
           "id": "CG_AI_KNOWLEDGE_CONFLICT",
           "defect": "A maintained knowledge/pricing file misstates approved product facts, units, source identity, locale, or freshness.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "ai-seo",
           "haiku_skill_source": "skill://user/6ac92f6d05808191abb1d6c36eeb07cd/ai-seo/SKILL.md",
           "haiku_excerpt_focus": "A maintained knowledge/pricing file misstates approved product facts, units, source identity, locale, or freshness.",
@@ -2218,7 +2934,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only conflicting literal facts/units/source identity/locale about the same explicitly identified product in a complete maintained knowledge/pricing file and its supplied same-unit/base factual record; infer no current external product facts or freshness."
         },
         {
           "id": "CG_AI_BOT_PURPOSE_CONFUSION",
@@ -2251,7 +2984,7 @@
         {
           "id": "CG_AI_VISIBILITY_LABEL",
           "defect": "A result conflates retrieval, citation, mention, recommendation, or purchase beyond the recorded response.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "ai-seo",
           "haiku_skill_source": "skill://user/6ac92f6d05808191abb1d6c36eeb07cd/ai-seo/SKILL.md",
           "haiku_excerpt_focus": "A result conflates retrieval, citation, mention, recommendation, or purchase beyond the recorded response.",
@@ -2260,12 +2993,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a claimed retrieval/citation/mention/recommendation/purchase label inconsistent with the complete response/provenance record explicitly supplied in the same source unit; no inference about external platforms or unseen responses."
         },
         {
           "id": "CG_AI_VISIBILITY_SCOPE",
           "defect": "An AI visibility rate or comparison exceeds its documented prompts, platforms, sample, market, or denominator.",
-          "evidence": "D+M+S",
+          "evidence": "D+M+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "ai-seo",
           "haiku_skill_source": "skill://user/6ac92f6d05808191abb1d6c36eeb07cd/ai-seo/SKILL.md",
           "haiku_excerpt_focus": "An AI visibility rate or comparison exceeds its documented prompts, platforms, sample, market, or denominator.",
@@ -2274,7 +3023,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "No universal word/keyword quotas, mandatory FAQ/schema/llms files, guaranteed uplift, x-default/self-canonical strategy or raw source platform claims; use only the verified applicable profile and intended consumer."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only arithmetic or scope generalization contradicted by the complete literal prompts/platforms/sample/market/denominator explicitly supplied in the same source unit; external AI visibility remains unverified."
         }
       ]
     },
@@ -2293,7 +3059,7 @@
         {
           "id": "CG_SEO_ESTIMATE_AS_MEASURED",
           "defect": "An estimated provider metric is labeled measured traffic or first-party performance.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "An estimated provider metric is labeled measured traffic or first-party performance.",
@@ -2302,12 +3068,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an unchanged figure expressly labeled estimated in the supplied literal source record but relabeled measured traffic/first-party performance in the changed assertion; do not infer a provider metric definition."
         },
         {
           "id": "CG_SEO_MARKET_SCOPE",
           "defect": "A metric is labeled for a locality, country, language, or channel that its field does not cover.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:keyword-research",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/keyword-research/SKILL.md",
           "haiku_excerpt_focus": "A metric is labeled for a locality, country, language, or channel that its field does not cover.",
@@ -2316,12 +3098,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a metric whose explicit literal source definition names a locality/country/language/channel different from the changed claim; unsupplied provider scope still requires S."
         },
         {
           "id": "CG_SEO_DEMAND_DOUBLE_COUNT",
           "defect": "A demand total treats overlapping variants or buckets as independent demand.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:keyword-research",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/keyword-research/SKILL.md",
           "haiku_excerpt_focus": "A demand total treats overlapping variants or buckets as independent demand.",
@@ -2330,12 +3128,29 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a total derived from complete literal rows explicitly identified as duplicate/overlapping variants and their supplied counting/formula contract; unknown demand overlap still requires S and M."
         },
         {
           "id": "CG_SEO_VOLUME_AS_VISITS",
           "defect": "Search volume is presented as visits without the stated supported transformation.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "Search volume is presented as visits without the stated supported transformation.",
@@ -2344,12 +3159,29 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal source field definitions explicitly identifying a figure as search volume while the changed text relabels that unchanged figure as measured visits without a transformation; do not infer a provider field definition."
         },
         {
           "id": "CG_SEO_SCENARIO_BASELINE",
           "defect": "A scenario hides necessary click-share/baseline assumptions or calls total potential visits incremental visits.",
-          "evidence": "D+M+S",
+          "evidence": "D+M+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A scenario hides necessary click-share/baseline assumptions or calls total potential visits incremental visits.",
@@ -2358,12 +3190,29 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal scenario whose stated formula/inputs show total potential visits labeled incremental without subtracting its supplied baseline; research validity and missing unstated assumptions still require M and S."
         },
         {
           "id": "CG_SEO_RANK_SEMANTICS",
           "defect": "A result-block position, source field, or observation is mislabeled as the claimed kind of ranking.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A result-block position, source field, or observation is mislabeled as the claimed kind of ranking.",
@@ -2372,12 +3221,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal source record with an explicit ranking/block/field definition that the changed assertion contradicts; do not infer source semantics, current rankings or external result types."
         },
         {
           "id": "CG_SEO_ABSENCE_OVERCLAIM",
           "defect": "Failed, limited-depth, or partial-sample research is presented as proof of no rankings or no feature.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "Failed, limited-depth, or partial-sample research is presented as proof of no rankings or no feature.",
@@ -2386,12 +3251,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit same-unit failed/limited-depth/partial-sample research record promoted by the changed text to categorical no rankings/no feature; missing external research alone is not evidence of absence or failure."
         },
         {
           "id": "CG_SEO_OBSERVATION_DATE",
           "defect": "A retrieval or metric-update date is represented as the date the ranking was observed.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A retrieval or metric-update date is represented as the date the ranking was observed.",
@@ -2400,12 +3281,28 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only complete literal date fields explicitly labeled retrieval/update versus ranking observation, where the changed assertion substitutes the wrong date role; no inference of actual observation history."
         },
         {
           "id": "CG_SEO_TEMPORAL_OVERCLAIM",
           "defect": "A stable baseline or trend is asserted beyond the supplied temporal observations.",
-          "evidence": "D+S+H",
+          "evidence": "D+S+H; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-audit",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-audit/SKILL.md",
           "haiku_excerpt_focus": "A stable baseline or trend is asserted beyond the supplied temporal observations.",
@@ -2414,7 +3311,24 @@
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded.",
             "Do not require freshness for timeless metric semantics or recorded failure/status facts; require dates only when material."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "H",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal temporal evidence series explicitly identifying its observation dates that the changed assertion says establishes a materially broader trend/baseline; do not infer completeness of external history."
         },
         {
           "id": "CG_SEO_RECOMMENDATION_DIAGNOSIS",
@@ -2541,7 +3455,7 @@
         {
           "id": "CG_LOCAL_GRID_SCOPE",
           "defect": "A local result is generalized beyond the sampled branch, coordinates, query, or map extent.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:local-seo",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/local-seo/SKILL.md",
           "haiku_excerpt_focus": "A local result is generalized beyond the sampled branch, coordinates, query, or map extent.",
@@ -2549,12 +3463,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a local conclusion exceeding the complete literal branch/coordinate/query/map-extent inventory explicitly supplied in the same source unit; do not infer real Maps performance or unsupplied coverage."
         },
         {
           "id": "CG_LOCAL_ABSENCE_CLAIM",
           "defect": "Sparse or limited local results are described as general invisibility or a full competitive loss.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:local-seo",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/local-seo/SKILL.md",
           "haiku_excerpt_focus": "Sparse or limited local results are described as general invisibility or a full competitive loss.",
@@ -2562,12 +3493,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit same-unit sparse/limited result record promoted to general invisibility/full competitive loss; external local visibility and unprovided grid observations remain unavailable."
         },
         {
           "id": "CG_LOCAL_CHANNEL_CONFLATION",
           "defect": "Organic/national evidence is presented as establishing Maps or local-pack performance.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "openseo:local-seo",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/local-seo/SKILL.md",
           "haiku_excerpt_focus": "Organic/national evidence is presented as establishing Maps or local-pack performance.",
@@ -2575,7 +3522,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit same-unit organic/national source definition presented as establishing Maps/local-pack results; do not infer external channel/provider definitions."
         },
         {
           "id": "CG_LOCAL_PROFILE_ELIGIBILITY",
@@ -2670,7 +3633,7 @@
         {
           "id": "CG_COMMERCE_SURFACE_CONFLICT",
           "defect": "Comparable page, markup, feed, or knowledge representations disagree on a material fact for the same offer.",
-          "evidence": "D+B+I+R",
+          "evidence": "D+B+I+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "grow-ecommerce-seo-geo",
           "haiku_skill_source": "skill://user/6ac4f7c9b1c0819193568de0cda345e3/grow-ecommerce-seo-geo/SKILL.md",
           "haiku_excerpt_focus": "Comparable page, markup, feed, or knowledge representations disagree on a material fact for the same offer.",
@@ -2678,7 +3641,25 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "I",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only two unconditionally co-present literal representations explicitly identifying the same SKU/variant/market/period and contradicting each other on a material fact; do not infer which is true, inventory state, template output or external feed records."
         },
         {
           "id": "CG_COMMERCE_CATEGORY_COVERAGE",
@@ -2785,7 +3766,7 @@
         {
           "id": "CG_COMPETITOR_ABSENCE_CLAIM",
           "defect": "Not observed or not listed is promoted to a categorical competitor capability absence.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "competitors",
           "haiku_skill_source": "skill://user/6ac92f6d05d08191b3cf17811e21d4f5/competitors/SKILL.md",
           "haiku_excerpt_focus": "Not observed or not listed is promoted to a categorical competitor capability absence.",
@@ -2793,12 +3774,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit same-unit not-observed/not-listed research limitation promoted to categorical competitor capability absence; no external capability conclusion follows from missing source evidence."
         },
         {
           "id": "CG_COMPARISON_LIKE_FOR_LIKE",
           "defect": "A comparison presents materially different tiers, periods, markets, definitions, or use cases as equivalent.",
-          "evidence": "D+B+S",
+          "evidence": "D+B+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "competitors",
           "haiku_skill_source": "skill://user/6ac92f6d05d08191b3cf17811e21d4f5/competitors/SKILL.md",
           "haiku_excerpt_focus": "A comparison presents materially different tiers, periods, markets, definitions, or use cases as equivalent.",
@@ -2806,7 +3803,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal comparison rows explicitly identifying materially different tiers/periods/markets/definitions/use cases while the changed prose presents them as equivalent; no inference about actual competitor offerings."
         },
         {
           "id": "CG_COMPARISON_FIT_LIMIT",
@@ -2862,7 +3876,7 @@
         {
           "id": "CG_CTA_OUTCOME_UNCLEAR",
           "defect": "The action and nearby copy fail to identify the actual outcome or next step needed by the visitor.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "cro",
           "haiku_skill_source": "skill://user/6ac92f6d05e88191808f56a57d298392/cro/SKILL.md",
           "haiku_excerpt_focus": "The action and nearby copy fail to identify the actual outcome or next step needed by the visitor.",
@@ -2870,7 +3884,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal CTA unit whose own explicit promised next action is not identifiable from the action label and adjacent copy; actual destination behavior/product flow is not inferred."
         },
         {
           "id": "CG_CTA_DESTINATION_MISMATCH",
@@ -2901,7 +3931,7 @@
         {
           "id": "CG_CTA_PRIMARY_GOAL_CONFLICT",
           "defect": "A specifically one-goal conversion unit promotes incompatible primary outcomes without a clear intended action.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+B+L only within source_evidence guards",
           "haiku_skill": "cro",
           "haiku_skill_source": "skill://user/6ac92f6d05e88191808f56a57d298392/cro/SKILL.md",
           "haiku_excerpt_focus": "A specifically one-goal conversion unit promotes incompatible primary outcomes without a clear intended action.",
@@ -2909,7 +3939,25 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "B",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal conversion unit with an explicit source-local one-goal requirement and incompatible literal primary actions; layout prominence and runtime interaction still require R."
         },
         {
           "id": "CG_LANDING_MESSAGE_MATCH",
@@ -2978,7 +4026,7 @@
         {
           "id": "CG_OFFER_VALUE_STACK",
           "defect": "A quantified bonus/value stack double counts, misadds, or asserts a valuation contradicted by its known basis.",
-          "evidence": "D+B+M",
+          "evidence": "D+B+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "offers",
           "haiku_skill_source": "skill://user/6ac92f6d06588191879719e67d61295d/offers/SKILL.md",
           "haiku_excerpt_focus": "A quantified bonus/value stack double counts, misadds, or asserts a valuation contradicted by its known basis.",
@@ -2986,7 +4034,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only addition/double counting from complete literal bonus/value inputs and their explicit units/basis in the same source; the truth or economic validity of the valuations still requires B and M."
         },
         {
           "id": "CG_OFFER_GUARANTEE",
@@ -3025,6 +4090,15 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "B",
+                "H"
+              ]
+            }
           ]
         }
       ]
@@ -3120,7 +4194,7 @@
         {
           "id": "CG_PRICE_DISCOUNT_ARITHMETIC",
           "defect": "A stated saving or discount disagrees with comparable monthly/annual or original/sale totals.",
-          "evidence": "D+B+M",
+          "evidence": "D+B+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "pricing",
           "haiku_skill_source": "skill://user/6ac92f6d067c8191b52695d83fd028ec/pricing/SKILL.md",
           "haiku_excerpt_focus": "A stated saving or discount disagrees with comparable monthly/annual or original/sale totals.",
@@ -3128,7 +4202,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only arithmetic from literal comparable original/sale or monthly/annual prices with explicit currency, billing period, commitments and supplied saving formula; do not infer approved pricing or missing fees."
         },
         {
           "id": "CG_PRICE_TRIAL_TERMS",
@@ -3185,7 +4276,7 @@
         {
           "id": "CG_FORM_LABEL_INSTRUCTION",
           "defect": "A required field or action lacks the label/instruction needed to submit correctly.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "cro",
           "haiku_skill_source": "skill://user/6ac92f6d05e88191808f56a57d298392/cro/SKILL.md",
           "haiku_excerpt_focus": "A required field or action lacks the label/instruction needed to submit correctly.",
@@ -3193,7 +4284,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete unconditional literal native form field/action with its purpose/requiredness explicit in the source and no text label, associated label, accessible-name attribute/target or necessary literal instruction. Components, spreads, interpolation and externally supplied labels/state are outside this alternative."
         },
         {
           "id": "CG_FORM_ERROR_RECOVERY",
@@ -3301,7 +4409,7 @@
         {
           "id": "CG_FLOW_PROGRESS_STATE",
           "defect": "A displayed completed item, required-step count, or progress percentage contradicts the actual supplied flow state; instantiate each property separately.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "onboarding",
           "haiku_skill_source": "skill://user/6ac92f6d06648191b89c264a0d981b73/onboarding/SKILL.md",
           "haiku_excerpt_focus": "A displayed completed item, required-step count, or progress percentage contradicts the actual supplied flow state; instantiate each property separately.",
@@ -3309,7 +4417,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal required-step count/progress percentage that contradicts the complete explicit same-unit list and supplied counting formula; actual completion/account state and dynamically computed progress require B and R."
         }
       ]
     },
@@ -3455,7 +4580,7 @@
         {
           "id": "CG_MODAL_ACCESSIBLE_IDENTIFICATION",
           "defect": "A dialog or essential modal control lacks the name/role needed under the adopted accessibility contract.",
-          "evidence": "D+P+R",
+          "evidence": "D+P+R; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "popups",
           "haiku_skill_source": "skill://user/6ac92f6d06748191a3384d8ca4875940/popups/SKILL.md",
           "haiku_excerpt_focus": "A dialog or essential modal control lacks the name/role needed under the adopted accessibility contract.",
@@ -3463,7 +4588,25 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete unconditional literal native dialog/essential control with explicit source role/purpose and no literal name/role or associated label target required by the supplied accessibility contract; do not infer component output, focus or keyboard behavior."
         }
       ]
     },
@@ -3519,7 +4662,7 @@
         {
           "id": "CG_TOOL_BOUNDARY_DISCLOSURE",
           "defect": "A result omits a known material assumption or limitation necessary to interpret its stated precision or promise.",
-          "evidence": "D+B+M",
+          "evidence": "D+B+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "free-tools",
           "haiku_skill_source": "skill://user/6ac92f6d060c81918fc1b4b65ff1eb6f/free-tools/SKILL.md",
           "haiku_excerpt_focus": "A result omits a known material assumption or limitation necessary to interpret its stated precision or promise.",
@@ -3527,7 +4670,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal result whose stated precision/promise conceals a material assumption or limitation explicitly supplied in the same complete result unit; infer no actual calculation behavior or missing model assumptions."
         },
         {
           "id": "CG_TOOL_NEXT_STEP_CONTRACT",
@@ -3545,7 +4705,7 @@
         {
           "id": "CG_TOOL_QUANTITY_MEANING",
           "defect": "An input/output label misstates the actual quantity, unit, time horizon, or meaning of its field; instantiate each field separately.",
-          "evidence": "D+B+R; M when the interpretation depends on the calculation",
+          "evidence": "D+B+R; M when the interpretation depends on the calculation; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "free-tools",
           "haiku_skill_source": "skill://user/6ac92f6d060c81918fc1b4b65ff1eb6f/free-tools/SKILL.md",
           "haiku_excerpt_focus": "An input/output label misstates the actual quantity, unit, time horizon, or meaning of its field; instantiate each field separately.",
@@ -3553,7 +4713,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal field label/unit/time horizon that contradicts that same field's explicit source-local definition or supplied literal formula; dynamic calculation, actual result state and undocumented field semantics remain unavailable."
         }
       ]
     },
@@ -3634,7 +4811,7 @@
         {
           "id": "CG_EMAIL_SUBJECT_PROMISE",
           "defect": "The subject or preheader materially misrepresents the actual message or offer.",
-          "evidence": "D+B",
+          "evidence": "D+B; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "emails",
           "haiku_skill_source": "skill://user/6ac92f6d060081919dca24f9a7f1682a/emails/SKILL.md",
           "haiku_excerpt_focus": "The subject or preheader materially misrepresents the actual message or offer.",
@@ -3642,7 +4819,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal subject/preheader that contradicts the complete literal message/offer supplied in the same source unit; external offer truth and recipient/runtime state remain unavailable."
         },
         {
           "id": "CG_EMAIL_TRIGGER_SEGMENT",
@@ -3827,7 +5020,7 @@
         {
           "id": "CG_SOCIAL_STANDALONE_CONTEXT",
           "defect": "Repurposing removes context or a qualifier necessary for the standalone post/clip to remain truthful.",
-          "evidence": "D+B+S",
+          "evidence": "D+B+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "social",
           "haiku_skill_source": "skill://user/6ac92f6d06dc819183254fe0d83e7224/social/SKILL.md",
           "haiku_excerpt_focus": "Repurposing removes context or a qualifier necessary for the standalone post/clip to remain truthful.",
@@ -3835,7 +5028,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal standalone post/clip text and its complete supplied original/base text, where a material explicit qualifier/referent is removed from the otherwise retained assertion; infer no unseen audiovisual context or external factual truth."
         },
         {
           "id": "CG_SOCIAL_CREDIT_CONTRACT",
@@ -3853,7 +5063,7 @@
         {
           "id": "CG_CAPTION_FIDELITY",
           "defect": "A caption, transcript, subtitle, or translated overlay materially misstates the supplied source speech or evidence.",
-          "evidence": "D+S+R",
+          "evidence": "D+S+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "video",
           "haiku_skill_source": "skill://user/6ac92f6d06e48191b91d6c16406597d3/video/SKILL.md",
           "haiku_excerpt_focus": "A caption, transcript, subtitle, or translated overlay materially misstates the supplied source speech or evidence.",
@@ -3861,7 +5071,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only literal caption/transcript/subtitle/translated text compared with a complete explicitly identified textual source transcript supplied in the same source/base counterpart; infer no actual audio, timing, placement, visual rendering or speech not supplied."
         },
         {
           "id": "CG_ASSET_REAL_UI",
@@ -3892,7 +5119,7 @@
         {
           "id": "CG_ALT_CONTENT",
           "defect": "An image's necessary textual alternative is missing or materially misdescribes its function/content.",
-          "evidence": "D+R",
+          "evidence": "D+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "image",
           "haiku_skill_source": "skill://user/6ac92f6d061881919e52840dd5fdaf58/image/SKILL.md",
           "haiku_excerpt_focus": "An image's necessary textual alternative is missing or materially misdescribes its function/content.",
@@ -3900,7 +5127,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal image whose essential purpose is explicit in the same source (for example the sole meaningful child of a named action link) and which lacks a necessary literal textual alternative or has an explicitly contradictory alternative. Do not infer unseen image content, treat decorative images as defective, or resolve component/spread/generated alternatives."
         },
         {
           "id": "CG_CAPTIONS_REQUIRED",
@@ -4205,7 +5448,7 @@
         {
           "id": "CG_REPORT_NUMERIC_RECONCILIATION",
           "defect": "A consequential calculation, variance, rate, ROI or driver total contradicts its stated inputs or formula.",
-          "evidence": "D+M",
+          "evidence": "D+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:validate-data",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/validate-data/SKILL.md",
           "haiku_excerpt_focus": "A consequential calculation, variance, rate, ROI or driver total contradicts its stated inputs or formula.",
@@ -4213,12 +5456,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only arithmetic/rates/variance/ROI/driver totals derived from all necessary literal inputs, units, denominators and formula supplied in the same source; infer no missing measurement definitions or external data validity."
         },
         {
           "id": "CG_REPORT_COMPARABILITY",
           "defect": "A comparison silently mixes incompatible periods, populations, units, definitions, windows or attribution methods.",
-          "evidence": "D+M",
+          "evidence": "D+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:validate-data",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/validate-data/SKILL.md",
           "haiku_excerpt_focus": "A comparison silently mixes incompatible periods, populations, units, definitions, windows or attribution methods.",
@@ -4226,12 +5485,28 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a comparison whose own complete literal source rows explicitly identify incompatible periods/populations/units/definitions/windows/attribution methods and whose changed text presents them as equivalent; infer no external dataset semantics."
         },
         {
           "id": "CG_REPORT_MISSING_AS_ZERO",
           "defect": "Unknown, unavailable or empty evidence is represented as an observed zero or complete actual.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:kpi-reporting",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/kpi-reporting/SKILL.md",
           "haiku_excerpt_focus": "Unknown, unavailable or empty evidence is represented as an observed zero or complete actual.",
@@ -4239,12 +5514,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal source-local evidence record explicitly marked unknown/unavailable/empty that the changed summary represents as an observed zero/complete actual; do not infer that an unprovided record is unknown or zero."
         },
         {
           "id": "CG_REPORT_UNCERTAINTY",
           "defect": "A report omits a known material uncertainty or access limitation while presenting the conclusion as established.",
-          "evidence": "D+S+M",
+          "evidence": "D+S+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:build-report",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/build-report/SKILL.md",
           "haiku_excerpt_focus": "A report omits a known material uncertainty or access limitation while presenting the conclusion as established.",
@@ -4252,12 +5544,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a complete literal report conclusion that suppresses a material limitation explicitly documented in its supplied same-unit evidence; do not infer missing external uncertainty."
         },
         {
           "id": "CG_VISUAL_ENCODING_TRUTH",
           "defect": "A chart specification demonstrably misrepresents supplied values through scale, aggregation, geometry or labels.",
-          "evidence": "D+M+R",
+          "evidence": "D+M+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:visualize-data",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/visualize-data/SKILL.md",
           "haiku_excerpt_focus": "A chart specification demonstrably misrepresents supplied values through scale, aggregation, geometry or labels.",
@@ -4265,12 +5574,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only an explicit literal chart specification plus all supplied values/scale/aggregation/geometry/labels where the specification itself contradicts its declared numeric mapping; no chart execution, actual rendering, pixel geometry or runtime data is inferred."
         },
         {
           "id": "CG_FIGURE_TEXT_CONFLICT",
           "defect": "A title, annotation, summary or adjacent prose contradicts the values, population or uncertainty shown in its figure.",
-          "evidence": "D+M+R",
+          "evidence": "D+M+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:visualize-data",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/visualize-data/SKILL.md",
           "haiku_excerpt_focus": "A title, annotation, summary or adjacent prose contradicts the values, population or uncertainty shown in its figure.",
@@ -4278,12 +5604,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal figure data/specification and adjacent title/annotation/summary that contradict each other on explicit values/population/uncertainty; actual rendered chart and unsupplied data remain unavailable."
         },
         {
           "id": "CG_REPORT_STATUS_BASIS",
           "defect": "A health/on-track/target judgement contradicts or omits its governing definition, target or pacing basis.",
-          "evidence": "D+B+M",
+          "evidence": "D+B+M; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:kpi-reporting",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/kpi-reporting/SKILL.md",
           "haiku_excerpt_focus": "A health/on-track/target judgement contradicts or omits its governing definition, target or pacing basis.",
@@ -4291,7 +5634,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "M"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal status judgment inconsistent with its complete explicit same-unit target, definition, inputs and pacing formula; do not infer the governing business target or validate actual performance."
         },
         {
           "id": "CG_EXPERIMENT_METRIC_CONTRACT",
@@ -4322,7 +5682,7 @@
         {
           "id": "CG_REPORT_RECOMMENDATION_SUPPORT",
           "defect": "An asserted recommendation or operating commitment exceeds the diagnosed evidence or known prerequisites.",
-          "evidence": "D+B+S",
+          "evidence": "D+B+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "data-analytics:build-report",
           "haiku_skill_source": "skill://Plugin_fc9843a6fb34819195d6c7802398a8a7/build-report/SKILL.md",
           "haiku_excerpt_focus": "An asserted recommendation or operating commitment exceeds the diagnosed evidence or known prerequisites.",
@@ -4330,12 +5690,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a recommendation contradicted by its own explicit same-unit diagnosis or known prerequisite statement; do not infer external feasibility or treat absent external proof alone as a defect."
         },
         {
           "id": "CG_REPORT_METHOD_PROVENANCE",
           "defect": "A report omits or misstates the method/source/verification provenance specifically required to interpret its material conclusions.",
-          "evidence": "D+P+S",
+          "evidence": "D+P+S; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-report",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-report/SKILL.md",
           "haiku_excerpt_focus": "A report omits or misstates the method/source/verification provenance specifically required to interpret its material conclusions.",
@@ -4343,12 +5720,30 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "P",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal source/method/verification attribution that contradicts the same-unit explicit provenance record under a supplied adopted reporting contract; infer no unrecorded method or verification activity."
         },
         {
           "id": "CG_ARTIFACT_FORMAT_CONTRACT",
           "defect": "One field, structure, hard size, dependency or presentation requirement violates the artifact's explicitly selected delivery contract.",
-          "evidence": "D+P+complete artifact",
+          "evidence": "D+P+complete artifact; source-only alternative: D+P+L only within source_evidence guards",
           "haiku_skill": "openseo:seo-report",
           "haiku_skill_source": "skill://plugin_asdk_app_6abddd2c7e4c819191f1398c4bd8e9b3/seo-report/SKILL.md",
           "haiku_excerpt_focus": "One field, structure, hard size, dependency or presentation requirement violates the artifact's explicitly selected delivery contract.",
@@ -4356,12 +5751,30 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "C",
+                "D",
+                "P"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "P",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only the complete literal artifact whose field/structure/hard size/dependency requirement is explicit in a supplied adopted delivery contract; runtime presentation and generated artifacts remain unavailable."
         },
         {
           "id": "CG_ARTIFACT_COMPLETION_CLAIM",
           "defect": "A handoff claims verified, saved, deployed, published, connected or working status contradicted by the supplied actual result.",
-          "evidence": "D+B+R",
+          "evidence": "D+B+R; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "sites:sites",
           "haiku_skill_source": "skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md",
           "haiku_excerpt_focus": "A handoff claims verified, saved, deployed, published, connected or working status contradicted by the supplied actual result.",
@@ -4369,12 +5782,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "R"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a literal handoff that claims completion/verification while the same supplied source record explicitly marks that exact step failed, pending or blocked; do not infer actual deployment/integration behavior from missing execution evidence."
         },
         {
           "id": "CG_UPDATE_CURRENT_FACT_CONFLICT",
           "defect": "A current update leaves mutually inconsistent supported facts or marks completion contrary to actual known criteria.",
-          "evidence": "D+B+H",
+          "evidence": "D+B+H; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "pages:maintain-space",
           "haiku_skill_source": "skill://plugin_connector_1p_4a72ddeef4c481918f92d8e8df18fb2c/maintain-space/SKILL.md",
           "haiku_excerpt_focus": "A current update leaves mutually inconsistent supported facts or marks completion contrary to actual known criteria.",
@@ -4382,12 +5812,29 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "B",
+                "D",
+                "H"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only mutually incompatible literal facts about the same explicitly scoped current item in the complete update, or a literal completed status contradicted by its own explicit unmet criterion; freshness/history and actual completion state still require the original evidence."
         },
         {
           "id": "CG_FEEDBACK_EVIDENCE_ANCHOR",
           "defect": "A review artifact criticizes an absent or materially different quote/location from its supplied target.",
-          "evidence": "D+S",
+          "evidence": "D+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "google-drive:google-drive-comments",
           "haiku_skill_source": "skill://plugin_connector_1p_ab21a553bfbc81919ea8fd1858e3ffa7/google-drive-comments/SKILL.md",
           "haiku_excerpt_focus": "A review artifact criticizes an absent or materially different quote/location from its supplied target.",
@@ -4395,7 +5842,23 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a review quote/location and its complete supplied literal target/base counterpart, where the quotation is absent or materially different at that identified location; do not infer external targets or unseen source versions."
         },
         {
           "id": "CG_STAT_PVALUE_MEANING",
@@ -4439,7 +5902,7 @@
         {
           "id": "CG_ATTRIBUTION_OUTCOME_DEDUP",
           "defect": "An outcome total counts overlapping platform, CRM, organic, event, survey, or other attribution credit as unique outcomes.",
-          "evidence": "D+M+S",
+          "evidence": "D+M+S; source-only alternative: D+L only within source_evidence guards",
           "haiku_skill": "attribution",
           "haiku_skill_source": "skill://user/6ac92f6d059881918f8a8a3a27844332/attribution/SKILL.md",
           "haiku_excerpt_focus": "An outcome total counts overlapping platform, CRM, organic, event, survey, or other attribution credit as unique outcomes.",
@@ -4447,7 +5910,24 @@
             "Review only the changed in-scope instance, honoring its actual draft/template/example/final role and explicit user overrides.",
             "Missing necessary evidence means not_evaluated; source absence alone does not establish fabrication or functional failure.",
             "Apply only the relevant adopted artifact/platform contract; optional tactics and unrelated source workflow instructions are excluded."
-          ]
+          ],
+          "evidence_paths": [
+            {
+              "needs": [
+                "D",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "needs": [
+                "D",
+                "L"
+              ],
+              "source_only": true
+            }
+          ],
+          "source_evidence": "Only a total counting complete literal records explicitly sharing the same outcome identifiers as unique outcomes, with the supplied counting-unit/overlap definitions; infer no hidden cross-channel identity or attribution semantics."
         }
       ]
     },

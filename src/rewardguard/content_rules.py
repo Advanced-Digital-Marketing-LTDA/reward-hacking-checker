@@ -21,6 +21,7 @@ class ContentRule:
     evidence_paths: tuple[frozenset[str], ...]
     evidence: str = ""  # the exact authored evidence contract
     conditional: frozenset[str] = frozenset()  # codes the contract names that no evidence path requires
+    source_evidence: str = ""  # bounded literal subtype eligible for an L evidence alternative
 
 
 _EVIDENCE = {
@@ -33,6 +34,7 @@ _EVIDENCE = {
     "M": "Relevant inputs, formulas, measurement definitions, populations, periods and denominators.",
     "H": "Dated historical/publication/version evidence.",
     "C": "The complete relevant artifact, record, page, output, or support inventory is provided.",
+    "L": "Literal observations from the changed/enclosing source or its supplied base counterpart. No code execution, rendered state, external truth, or complete repository inventory is implied.",
 }
 _CODE_CHAIN = re.compile(r"\bD(?:\s*\+\s*[A-Z]\b)*")
 _COMPLETE = re.compile(
@@ -86,7 +88,12 @@ def _evidence_paths(rule: dict) -> tuple[frozenset[str], ...]:
         for item in raw:
             if not isinstance(item, dict):
                 raise _error("evidence path must be an object")
-            paths.append(_path(item.get("needs")))
+            path = _path(item.get("needs"))
+            if "source_only" in item and type(item["source_only"]) is not bool:
+                raise _error("evidence path source_only must be a boolean")
+            if item.get("source_only", False) != ("L" in path):
+                raise _error("L evidence paths must be explicitly marked source_only")
+            paths.append(path)
         return tuple(dict.fromkeys(paths))
     if rule["id"] in _ALTERNATIVES:
         return tuple(_path(needs) for needs in _ALTERNATIVES[rule["id"]])
@@ -138,7 +145,11 @@ def _validate(data: object) -> dict:
                 raise _error(f"{rule_id} requires inline rubric exclusions")
             for exclusion in exclusions:
                 _text(exclusion, f"{rule_id} exclusion")
-            _evidence_paths(rule)
+            paths = _evidence_paths(rule)
+            if any("L" in path for path in paths):
+                _text(rule.get("source_evidence"), f"{rule_id} source_evidence")
+            elif "source_evidence" in rule:
+                raise _error(f"{rule_id} source_evidence requires an L evidence path")
     scope = data.get("scope")
     if not isinstance(scope, dict):
         raise _error("scope must be an object")
@@ -169,6 +180,13 @@ def _rubric(data: dict, pack: dict, rule: dict, paths: tuple[frozenset[str], ...
     definitions = "\n".join(f"- {code}: {_EVIDENCE[code]}" for code in _EVIDENCE if code in used)
     alternatives = " OR ".join("+".join(code for code in _EVIDENCE if code in path) for path in paths)
     exclusions = "\n".join(f"- {item}" for item in rule["rubric_exclusions"])
+    source_evidence = (
+        f"Source-only alternative scope: {rule['source_evidence']} "
+        "L is available only when this exact subtype and all its guards are established by the supplied source. "
+        "This alternative replaces the original evidence requirements only for that subtype. "
+        "A source-only pass covers only the instantiated literal observation; it never establishes correct effective output or runtime behavior.\n"
+        if rule.get("source_evidence") else ""
+    )
     return (
         f"Bounded specialist review: {rule['haiku_skill']}\n"
         f"Rule: {rule['id']}\n"
@@ -182,8 +200,9 @@ def _rubric(data: dict, pack: dict, rule: dict, paths: tuple[frozenset[str], ...
         "Identify the exact changed instance and its conditions; never assign one aggregate probability to the pack.\n\n"
         f"Exact evidence contract: {rule['evidence']}\n"
         f"Acceptable evidence paths: {alternatives}. Each path is a complete alternative, not a combined requirement.\n"
+        f"{source_evidence}"
         f"{definitions}\n"
-        "Conditional requirements in the exact evidence contract still apply to the named subtype. "
+        "Conditional requirements in the exact evidence contract still apply to the named subtype, except those explicitly replaced by its scoped source-only alternative. "
         "Complete relevant artifact means the affected unit is available, not merely a patch fragment. "
         "Dates/freshness must fit the claim when material; recency is not a universal age cutoff. "
         "If required evidence is absent, return not_evaluated rather than a defect or a claimed pass.\n\n"
@@ -219,6 +238,7 @@ def all_rules() -> list[ContentRule]:
                 evidence_paths=paths,
                 evidence=item["evidence"],
                 conditional=frozenset(_mentioned(item)) - frozenset().union(*paths),
+                source_evidence=item.get("source_evidence", ""),
             ))
     return result
 

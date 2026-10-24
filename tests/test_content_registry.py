@@ -68,18 +68,18 @@ def test_alternative_evidence_keeps_contract_omissions_evaluable_without_a_missi
 @pytest.mark.parametrize(
     "rule_id,expected",
     [
-        ("CG_REQUIRED_SOURCE_PROVENANCE", {"D", "P", "C"}),
-        ("CG_PUBLICATION_MODULE_CONTRACT", {"D", "P", "R", "C"}),
-        ("CG_SEARCH_ANSWER_COVERAGE", {"D", "B", "C"}),
-        ("CG_SCHEMA_VISIBLE_CONTENT_REQUIREMENT", {"D", "P", "R", "C"}),
-        ("CG_ARTIFACT_FORMAT_CONTRACT", {"D", "P", "C"}),
-        ("CG_PRODUCT_FACT_CONFLICT", {"D", "B"}),
-        ("CG_SCHEMA_SYNTAX", {"D", "R"}),
-        ("CG_ADVISOR_SIMULATION_TRUTH", {"D", "B"}),
+        ("CG_REQUIRED_SOURCE_PROVENANCE", ({"D", "P", "C"},)),
+        ("CG_PUBLICATION_MODULE_CONTRACT", ({"D", "P", "R", "C"}, {"D", "P", "L"})),
+        ("CG_SEARCH_ANSWER_COVERAGE", ({"D", "B", "C"}, {"D", "L"})),
+        ("CG_SCHEMA_VISIBLE_CONTENT_REQUIREMENT", ({"D", "P", "R", "C"}, {"D", "P", "L"})),
+        ("CG_ARTIFACT_FORMAT_CONTRACT", ({"D", "P", "C"}, {"D", "P", "L"})),
+        ("CG_PRODUCT_FACT_CONFLICT", ({"D", "B"},)),
+        ("CG_SCHEMA_SYNTAX", ({"D", "R"}, {"D", "L"})),
+        ("CG_ADVISOR_SIMULATION_TRUTH", ({"D", "B"},)),
     ],
 )
 def test_complete_artifacts_and_first_evidence_clause_are_distinct_requirements(rule_id, expected):
-    assert _rules()[rule_id].evidence_paths == (frozenset(expected),)
+    assert _rules()[rule_id].evidence_paths == tuple(frozenset(path) for path in expected)
 
 
 def test_rubric_carries_one_specialist_and_exact_evidence_without_unloaded_guides():

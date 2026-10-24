@@ -57,9 +57,12 @@ class ContentResult:
     findings: list[Finding] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
     coverage: list[dict] = field(default_factory=list)
+    provenance: list[dict] = field(default_factory=list)
+    omissions: list[dict] = field(default_factory=list)
 
     def to_dict(self):
-        return {'status': self.status, 'coverage': self.coverage}
+        return {'status': self.status, 'coverage': self.coverage,
+                'provenance': self.provenance, 'omissions': self.omissions}
 
 
 def _safe(text: str) -> str:
@@ -105,25 +108,6 @@ def candidates(repo, base, head, cfg, changed):
     return selected
 
 
-def _context(repo, trusted_base, cfg, result):
-    pieces, available, size = [], set(), 0
-    budget = min(24000, cfg.max_state_chars // 3)
-    for code, paths in cfg.content.context.items():
-        for path in paths:
-            text = gitops.show_file(repo, trusted_base, path)
-            if text is None or not text.strip():
-                continue
-            piece = f'Evidence {code}, trusted base file {path}:\n{_safe(text)}\n'
-            if size + len(piece) > budget:
-                result.coverage.append({'status': 'not_evaluated', 'context': path,
-                                        'reason': 'Complete evidence file exceeds the context budget'})
-                continue  # never silently truncate a required evidence record
-            pieces.append(piece)
-            available.add(code)
-            size += len(piece)
-    return '\n'.join(pieces), available
-
-
 def _gap_questions(batch, available):
     """For a rule whose evidence contract names conditional evidence that is not supplied, ask whether the
     instance falls under that condition; if it does, the instance is not evaluated."""
@@ -167,6 +151,25 @@ def focused_rubric(rule, skill, instance, cat):
     return rubric + ('\nEvaluate only this instance: ' + instance if instance else '')
 
 
+
+_EVIDENCE_HELP = {
+    'B': 'Relevant product/audience/offer facts or an explicit brief in the trusted repository',
+    'P': 'An adopted policy or artifact/platform profile that applies to this changed instance',
+    'I': 'The relevant route, page, record or product inventory, with its actual scope',
+    'S': 'The primary source or proof for this specific claim, with provenance',
+    'R': 'Resolved output or a recorded observation matching this page and revision',
+    'M': 'The inputs, formulas and measurement definitions for this specific number',
+    'H': 'Historical evidence for this particular date, version or commitment',
+    'C': 'The complete affected artifact or support inventory',
+    'L': 'The literal source observation permitted by this particular rule',
+}
+
+
+def _rule_row(rule, cf, **values):
+    return {'file': cf.path, 'rule': rule.id, 'pack': rule.pack,
+            'title': rule.statement, 'skill': rule.skill, **values}
+
+
 def review(repo: str, base: str, head: str, cfg: Config, changed, description='', *,
            trusted_base=None, client=None, haiku=None, log=print) -> ContentResult:
     result = ContentResult()
@@ -178,39 +181,52 @@ def review(repo: str, base: str, head: str, cfg: Config, changed, description=''
         result.notes.append('Content review skipped: no content-bearing changes.')
         return result
 
-    from . import content_rules
+    from . import content_evidence, content_rules
     routes = content_rules.pack_routes()
     unknown = set(cfg.content.packs) - set(routes)
     if unknown:
         raise RewardGuardError('Unknown content pack(s): ' + ', '.join(sorted(unknown)))
     allowed = set(cfg.content.packs) or set(routes)
     cat = content_rules.catalog()
-    # A selected pack also needs the shared rules its cross-pack routes import from other packs
     imported = {rule_id for route in cat.get('cross_pack_routes', [])
                 if route['from'] in allowed or route['from'] == 'all content artifacts' for rule_id in route['use']}
     rules = [r for r in content_rules.all_rules()
              if (r.pack in allowed or r.id in imported) and cfg.severity(r.id, 'warn') != 'off']
-    context, evidence = _context(repo, trusted_base or base, cfg, result)
     variant_specs = cat.get('artifact_contract_variants', [])
-    seen = {}
+    seen, source_seen = {}, set()
     for cf in selected:
+        # Sources are discovered per affected artifact. This keeps adjacent source,
+        # policies and product facts focused rather than loading all installed skills.
+        bundle = content_evidence.collect(repo, trusted_base or base, head, cf.path, cfg,
+                                          max_chars=min(24000, cfg.max_state_chars // 3))
+        for source in bundle.provenance:
+            identity = tuple(str(source.get(k, '')) for k in ('path', 'commit', 'role', 'start_line', 'end_line'))
+            if identity not in source_seen:
+                result.provenance.append(source)
+                source_seen.add(identity)
+        result.omissions.extend({'file': cf.path, **item} for item in bundle.omissions)
         full = gitops.show_file(repo, head, cf.path)
-        # Full source supplies completeness, not an invented rendered/runtime observation.
-        complete = full is not None and len(full) <= min(10000, cfg.max_state_chars // 5)
-        suffix = ('\n--- complete source artifact (not a runtime observation) ---\n' + _safe(full)) if complete else ''
-        suffix += '\n--- trusted context ---\n' + context
+        complete = full is not None and len(full) <= min(32000, cfg.max_state_chars // 3)
+        suffix = ('\n--- complete proposed source artifact (not a runtime observation) ---\n' + _safe(full)) if complete else ''
+        suffix += '\n--- automatically collected repository evidence (scoped claims and source data) ---\n' + bundle.text
         budget = cfg.max_state_chars - len(suffix) - 3000
         if budget < 4000:
-            raise RewardGuardError('Content state budget is too small for complete evidence')
-        chunk_cfg = replace(cfg, max_state_chars=budget)
-        chunks = judge._file_chunks(repo, base, head, chunk_cfg, cf, OTHER, _safe(description[:2000]))
+            raise RewardGuardError('Content state budget is too small for the required evidence')
+        chunks = judge._file_chunks(repo, base, head, replace(cfg, max_state_chars=budget), cf, OTHER,
+                                    _safe(description[:2000]))
         if not chunks:
             result.coverage.append({'file': cf.path, 'status': 'not_evaluated',
-                                    'reason': 'No textual diff; binary/visual evidence is unavailable'})
+                                    'reason': 'No textual source; binary/visual evidence is unavailable'})
+            if result.status == 'skipped':
+                result.status = 'not_evaluated'
             continue
         added = {line: text for h in gitops.file_hunks(repo, base, head, cf.path, 0, cf.old_path) for line, text in h.added}
         for chunk in chunks:
-            state = _safe('Content under review. Only supplied base context governs this review.\n' + chunk.text + suffix)
+            state = _safe('Content under review. Only supplied trusted-base policies govern this review. '
+                          'Repository-authored facts are scoped claims, not independently verified truth. '
+                          'A file inventory does not establish complete public routes. R/M observations must '
+                          'match this target and revision; an unrelated or stale observation cannot establish readiness.\n'
+                          + chunk.text + suffix)
             if len(state) > cfg.max_state_chars:
                 raise RewardGuardError(f'Content diff contains an oversized line/chunk: {cf.path}')
             if client is None:
@@ -221,61 +237,113 @@ def review(repo: str, base: str, head: str, cfg: Config, changed, description=''
             if p < WARN_AT:
                 continue
             result.status = 'reviewed'
-            route_questions = {f'pack_{key}': f'The actual changed artifact and feature require this review: {routes[key]}{BOUNDARY}'
-                               for key in sorted(allowed)}
+            questions = {f'pack_{key}': f'The actual changed artifact and feature require this review: {routes[key]}{BOUNDARY}'
+                         for key in sorted(allowed)}
             for index, variant in enumerate(variant_specs):
-                route_questions[f'variant_{index}'] = f'This is actually the following artifact, not an example or mention: {variant["artifact"]}.{BOUNDARY}'
-            route_answers = {}
-            for batch in _batches(list(route_questions.items())):
-                route_answers.update(_ask(client, state, dict(batch)))
-            active = {key for key in allowed if route_answers['pack_' + key] >= WARN_AT}
-            variants = [v for index, v in enumerate(variant_specs) if route_answers[f'variant_{index}'] >= WARN_AT]
-            available = evidence | {'D'} | ({'C'} if complete else set())
-            jobs = []
+                questions[f'variant_{index}'] = f'This is actually the following artifact, not an example or mention: {variant["artifact"]}.{BOUNDARY}'
+            answers = {}
+            for batch in _batches(list(questions.items())):
+                answers.update(_ask(client, state, dict(batch)))
+            active = {key for key in allowed if answers['pack_' + key] >= WARN_AT}
+            variants = [v for index, v in enumerate(variant_specs) if answers[f'variant_{index}'] >= WARN_AT]
+            available = bundle.available | {'D'} | ({'C'} if complete else set())
+            applicable = []
             for rule in rules:
                 shared = any((route['from'] in active or route['from'] == 'all content artifacts')
                              and rule.id in route['use'] for route in cat.get('cross_pack_routes', []))
-                if rule.pack not in active and not shared:
+                if rule.pack in active or shared:
+                    applicable.append(rule)
+            # Pack routing is a coarse filter. An unrelated rule in the same pack
+            # must not become a missing-evidence entry just because it exists.
+            applicability_questions = {}
+            for rule in applicable:
+                applicability_questions['applies_' + rule.id] = (
+                    'This specific check applies to an actual changed claim, field, mechanism or required artifact: '
+                    + rule.statement + '. Decide applicability, not whether the defect exists. '
+                    'A topic mention, example, optional tactic, or unrelated research method does not make it applicable. '
+                    'For adopted-policy-only requirements, an actual applicable adopted requirement must be supplied. '
+                    'A concrete factual claim may be applicable even if its proof is missing. '
+                    f'Evidence contract: {rule.evidence}.' + BOUNDARY)
+                if rule.source_evidence:
+                    applicability_questions['literal_' + rule.id] = (
+                        'The exact changed instance is within this permitted literal-source subtype AND the needed '
+                        'source observations are actually supplied: ' + rule.source_evidence +
+                        ' Decide subtype/readiness, not whether the defect exists. Do not infer rendered, computed, '
+                        'interactive, fetched or external state from templates or file names.' + BOUNDARY)
+            applicability = {}
+            for batch in _batches(list(applicability_questions.items())):
+                applicability.update(_ask(client, state, dict(batch)))
+            jobs, metadata = [], {}
+            for rule in applicable:
+                ap = applicability['applies_' + rule.id]
+                if ap < WARN_AT:
+                    result.coverage.append(_rule_row(rule, cf, status='not_applicable', applicability=ap))
                     continue
-                if not any(path <= available for path in rule.evidence_paths):
-                    result.coverage.append({'file': cf.path, 'rule': rule.id, 'status': 'not_evaluated',
-                                            'reason': 'Missing required evidence',
-                                            'requires': [sorted(path) for path in rule.evidence_paths], 'available': sorted(available)})
+                source_only = bool(rule.source_evidence and applicability.get('literal_' + rule.id, 0) >= WARN_AT)
+                rule_available = available | ({'L'} if source_only else set())
+                paths = [path for path in rule.evidence_paths if path <= rule_available]
+                if not paths:
+                    missing = min((path - rule_available for path in rule.evidence_paths), key=len)
+                    result.coverage.append(_rule_row(rule, cf, status='not_evaluated', applicability=ap,
+                        reason='Relevant check lacks specific supporting evidence after repository discovery',
+                        requires=[sorted(path) for path in rule.evidence_paths], available=sorted(rule_available),
+                        missing_sources=[_EVIDENCE_HELP.get(code, code) for code in sorted(missing)]))
                     continue
                 if rule.id == 'CG_ARTIFACT_FORMAT_CONTRACT' and not any(v['rule'] == rule.id for v in variants):
-                    result.coverage.append({'file': cf.path, 'rule': rule.id, 'status': 'not_evaluated',
-                                            'reason': 'No specific adopted artifact subtype was identified'})
+                    result.coverage.append(_rule_row(rule, cf, status='not_applicable', applicability=ap,
+                                                    reason='No adopted artifact subtype identified'))
                     continue
+                # Only the authored L alternative replaces runtime/external evidence.
+                selected_source = source_only and any('L' in path for path in paths)
+                contract = ('Literal source subtype: ' + rule.source_evidence) if selected_source else rule.evidence
                 for variant, skill, scope in _specialist(rule, active, state, variants):
                     for prop in FIELDS.get(rule.id, ('',)):
                         instance = ':'.join(filter(None, (variant, prop)))
-                        question = (rule.statement + (f' Evaluate only the named field/mechanism: {prop}.' if prop else '') +
-                                    (f' Artifact contract: {scope}.' if scope else '') +
-                                    f' Evidence contract: {rule.evidence}.' + BOUNDARY)
                         key = rule.id + ('__' + str(len(jobs)) if instance else '')
-                        jobs.append((key, rule, instance, skill, question))
-            log(f'content review: {cf.path}: {len(active)} pack(s), {len(jobs)} evidenced proposition(s)')
+                        statement = (rule.statement + (f' Evaluate only the named field/mechanism: {prop}.' if prop else '') +
+                                     (f' Artifact contract: {scope}.' if scope else '') +
+                                     f' Evaluate only this evidenced scope: {contract}.' + BOUNDARY)
+                        jobs.append((key, rule, instance, skill, statement))
+                        metadata[key] = {'source_only': selected_source, 'available': rule_available,
+                                         'applicability': ap, 'contract': contract}
+            log(f'content review: {cf.path}: {len(active)} pack(s), {len(jobs)} evidenced proposition(s), '
+                f'{len(bundle.provenance)} scoped repository source(s)')
             for batch in _batches(jobs):
-                questions = {j[0]: j[4] for j in batch}
-                questions.update(_gap_questions(batch, available))
+                questions = {job[0]: job[4] for job in batch}
+                for key, rule, instance, _skill, _statement in batch:
+                    m = metadata[key]
+                    questions['ready_' + key] = (
+                        'The supplied evidence is sufficient and relevant to evaluate this exact check, whether '
+                        'it passes or fails: ' + rule.statement +
+                        (f' Instance: {instance}.' if instance else '') +
+                        f' Scope: {m["contract"]}. Verify actual target, record, revision, adopted policy and '
+                        'required primary facts. A generic README, unrelated source, partial file inventory or '
+                        'old browser observation does not establish missing facts. Conflicting repository claims '
+                        'are not independent truth. Return low probability when a required fact is unavailable.' + BOUNDARY)
+                conditional_jobs = [job for job in batch if not metadata[job[0]]['source_only']]
+                questions.update(_gap_questions(conditional_jobs, available))
                 answers = _ask(client, state, questions)
                 for key, rule, instance, skill, statement in batch:
-                    if answers.get(key + '__gap', 0) >= WARN_AT:
-                        result.coverage.append({'file': cf.path, 'rule': rule.id, 'instance': instance,
-                                                'status': 'not_evaluated', 'reason': 'Missing conditional evidence',
-                                                'requires': sorted(rule.conditional - available)})
+                    m = metadata[key]
+                    if answers['ready_' + key] < WARN_AT or answers.get(key + '__gap', 0) >= WARN_AT:
+                        missing = sorted(rule.conditional - m['available'])
+                        result.coverage.append(_rule_row(rule, cf, instance=instance, status='not_evaluated',
+                            source_only=m['source_only'], reason='Supplied sources do not establish this specific target/claim or required condition',
+                            requires=missing, missing_sources=[_EVIDENCE_HELP.get(code, code) for code in missing] or
+                            ['Evidence matching this particular target, record, revision and adopted contract']))
                         continue
                     probability = answers[key]
                     severity = grade(probability)
-                    result.coverage.append({'file': cf.path, 'rule': rule.id, 'instance': instance,
-                                            'status': 'evaluated', 'probability': probability})
+                    result.coverage.append(_rule_row(rule, cf, instance=instance, status='evaluated',
+                        probability=probability, applicability=m['applicability'], source_only=m['source_only']))
                     if severity is None:
                         continue
                     if haiku is None:
                         haiku = explainer.HaikuExplainer(cfg)
                     rubric = focused_rubric(rule, skill, instance, cat)
-                    details = haiku.explain_content(state, rule.id, statement, rubric)
-                    details = _ground_details(details, added)
+                    if m['source_only']:
+                        rubric += '\nEvaluate only the literal source subtype: ' + rule.source_evidence
+                    details = _ground_details(haiku.explain_content(state, rule.id, statement, rubric), added)
                     line = details[0]['line'] if details else None
                     finding = Finding(rule.id, severity, 'Jev: ' + rule.statement + (f' [{instance}]' if instance else ''),
                                       file=cf.path, line=line, source='content', probability=probability, details=details)
@@ -284,7 +352,10 @@ def review(repo: str, base: str, head: str, cfg: Config, changed, description=''
                         seen[identity] = finding
     result.findings = list(seen.values())
     if result.status == 'skipped':
-        result.notes.append('Content review skipped: no text chunk classified at or above 0.60; see coverage for unreviewable assets.')
+        result.notes.append('Content review skipped: no text chunk classified at or above 0.60.')
     else:
-        result.notes.append(f'Content review: {len(result.findings)} finding(s); evidence gaps are recorded separately as not_evaluated.')
+        evaluated = sum(row.get('status') == 'evaluated' for row in result.coverage)
+        gaps = sum(row.get('status') == 'not_evaluated' for row in result.coverage)
+        result.notes.append(f'Content review: {evaluated} proposition(s) evaluated, {len(result.findings)} finding(s), '
+                            f'{gaps} relevant evidence gap(s); repository sources were collected automatically.')
     return result

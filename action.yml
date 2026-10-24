@@ -34,8 +34,12 @@ inputs:
     description: Post or update the report as a PR comment ("true"/"false"). Check mode only.
     required: false
     default: "true"
+  content-checks:
+    description: Publish individual content rule checks (requires checks:write). Check mode only.
+    required: false
+    default: "true"
   github-token:
-    description: Token used to post the PR comment. Check mode only.
+    description: Token used to post the PR comment and content checks. Check mode only.
     required: false
     default: ${{ github.token }}
 
@@ -48,7 +52,7 @@ outputs:
     value: ${{ steps.base.outputs.head }}
   result:
     description: '"passed" or "failed" (check mode)'
-    value: ${{ steps.check.outputs.result }}
+    value: ${{ steps.final_result.outputs.result }}
 
 runs:
   using: composite
@@ -75,7 +79,7 @@ runs:
 
     - name: Install rewardguard
       shell: bash
-      run: python -m pip install --quiet "${{ github.action_path }}"
+      run: python -I -m pip install --quiet "${{ github.action_path }}"
 
     - name: Resolve base
       id: base
@@ -145,7 +149,7 @@ runs:
       env:
         BASE: ${{ steps.base.outputs.ref }}
         REVIEW_HEAD: ${{ steps.base.outputs.head }}
-      run: rewardguard run-tests --base "$BASE" --head "$REVIEW_HEAD" --out "$RUNNER_TEMP/rewardguard-run.json"
+      run: python -I -m rewardguard.cli run-tests --base "$BASE" --head "$REVIEW_HEAD" --out "$RUNNER_TEMP/rewardguard-run.json"
 
     - name: Upload run results
       if: inputs.mode == 'tests'
@@ -184,14 +188,30 @@ runs:
         if [ "$TESTS" = "true" ]; then
           results=(--run-results "$RUNNER_TEMP/rewardguard-run/rewardguard-run.json")
         fi
+        rm -f "$RUNNER_TEMP/rewardguard.md" "$RUNNER_TEMP/rewardguard.json"
         set +e
-        rewardguard check --base "$BASE" --head "$REVIEW_HEAD" --no-local-tests "${results[@]}" \
+        python -I -m rewardguard.cli check --base "$BASE" --head "$REVIEW_HEAD" --no-local-tests "${results[@]}" \
           --markdown "$RUNNER_TEMP/rewardguard.md" --json "$RUNNER_TEMP/rewardguard.json"
         code=$?
         set -e
-        cat "$RUNNER_TEMP/rewardguard.md" >> "$GITHUB_STEP_SUMMARY"
+        if [ -f "$RUNNER_TEMP/rewardguard.md" ]; then
+          cat "$RUNNER_TEMP/rewardguard.md" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "::error::RewardGuard produced no Markdown report; inspect the judge error above."
+        fi
         if [ $code -eq 0 ]; then echo "result=passed" >> "$GITHUB_OUTPUT"; else echo "result=failed" >> "$GITHUB_OUTPUT"; fi
         echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+
+    - name: Publish scoped content checks
+      if: always() && inputs.mode == 'check' && inputs.content-checks == 'true' && steps.check.outcome != 'skipped'
+      id: content_checks
+      continue-on-error: true # Set result preserves the original judge exit before reporting publisher errors.
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        REVIEW_HEAD: ${{ steps.base.outputs.head }}
+        REPO: ${{ github.repository }}
+      run: python -I -m rewardguard.content_checks --report "$RUNNER_TEMP/rewardguard.json" --head "$REVIEW_HEAD" --repo "$REPO"
 
     - name: Post PR comment
       if: inputs.mode == 'check' && inputs.comment == 'true' && github.event_name == 'pull_request'
@@ -201,6 +221,7 @@ runs:
         PR: ${{ github.event.pull_request.number }}
         REPO: ${{ github.repository }}
       run: |
+        [ -f "$RUNNER_TEMP/rewardguard.md" ] || exit 0
         id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
           --jq '.[] | select(.body | startswith("<!-- rewardguard-report -->")) | .id' | tail -n 1)
         if [ -n "$id" ]; then
@@ -210,6 +231,22 @@ runs:
         fi
 
     - name: Set result
-      if: inputs.mode == 'check'
+      id: final_result
+      if: always() && inputs.mode == 'check'
       shell: bash
-      run: exit ${{ steps.check.outputs.exit_code }}
+      env:
+        JUDGE_EXIT: ${{ steps.check.outputs.exit_code }}
+        PUBLISH_OUTCOME: ${{ steps.content_checks.outcome }}
+        PUBLISH_ENABLED: ${{ inputs.content-checks }}
+      run: |
+        echo "result=failed" >> "$GITHUB_OUTPUT"
+        case "$JUDGE_EXIT" in
+          0) ;;
+          [1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]) exit "$JUDGE_EXIT" ;;
+          *) echo "::error::RewardGuard judge did not produce a valid result."; exit 2 ;;
+        esac
+        case "$PUBLISH_ENABLED:$PUBLISH_OUTCOME" in
+          true:success|false:skipped) ;;
+          *) echo "::error::Scoped content checks could not be published completely."; exit 2 ;;
+        esac
+        echo "result=passed" >> "$GITHUB_OUTPUT"

@@ -71,7 +71,9 @@ TEST_QUESTIONS = {
 SOURCE_QUESTIONS = {
     "hardcoded": ("HARDCODED_OUTPUT",
                   "In this diff of application code, a function returns or produces a hard-coded literal result "
-                  "(a specific number, string, array or object) instead of computing it from its inputs."),
+                  "(a specific number, string, array or object) instead of required computation from its inputs. "
+                  "Authored prose, editorial metadata, translations, approved catalog data and intentional static "
+                  "page content are legitimate literals; their presence alone does not satisfy this defect."),
     "special_case": ("SPECIAL_CASED_INPUTS",
                      "In this diff of application code, a new condition checks for specific literal input values, "
                      "or for whether a test is running, and returns a different result for those cases than the "

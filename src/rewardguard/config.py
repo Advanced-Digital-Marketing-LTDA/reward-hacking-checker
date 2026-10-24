@@ -36,7 +36,7 @@ DEFAULT_EXCLUDE = [
     "**/{package-lock.json,yarn.lock,pnpm-lock.yaml}",
 ]
 DEFAULT_CONTENT_INCLUDE = [
-    "**/*.{md,mdx,html,htm,astro,vue,svelte,jsx,tsx}",
+    "**/*.{md,mdx,html,htm,astro,vue,svelte,jsx,tsx,svg,vtt,srt}",
     "**/{content,contents,copy,data,locales,locale,i18n,translations,messages}/**/*.{json,jsonc,yaml,yml,txt,text}",
     "**/*.{content,copy,locale,locales,i18n,translations,messages}.{json,jsonc,yaml,yml,txt,text}",
     "**/robots.{txt,js,ts,mjs,cjs,mts,cts}",

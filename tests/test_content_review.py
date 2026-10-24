@@ -52,7 +52,8 @@ class Jev:
 
     def ask(self, state, questions):
         self.calls.append((state, questions))
-        return {key: (self.content if key == 'content_task' else
+        return {key: (.9 if key.startswith(('applies_', 'ready_')) else
+                      self.content if key == 'content_task' else
                       .9 if key == 'pack_' + self.pack else
                       self.probability if key == 'CG_INTERNAL_CONTRADICTION' else .01)
                 for key in questions}
@@ -121,13 +122,13 @@ def test_context_is_from_base_and_never_proposed_policy(repo):
     cfg.content.packs = ['writing']
     cfg.content.context = {'B': ['facts.md']}
     client = Jev()
-    engine().review(str(repo), git(repo, 'rev-parse', 'main'), git(repo, 'rev-parse', 'HEAD'),
-                    cfg, changed, client=client, haiku=Haiku(), log=lambda _: None)
+    result = engine().review(str(repo), git(repo, 'rev-parse', 'main'), git(repo, 'rev-parse', 'HEAD'),
+                             cfg, changed, client=client, haiku=Haiku(), log=lambda _: None)
     assert any('Trusted base product facts.' in state for state, _ in client.calls)
-    for state, _ in client.calls:
-        if '--- trusted context ---' in state:
-            context = state.split('--- trusted context ---', 1)[1]
-            assert 'PROPOSED GUIDANCE' not in context
+    policy_sources = [source for source in result.provenance if source['trusted_policy']]
+    assert policy_sources
+    assert all(source['commit'] == git(repo, 'rev-parse', 'main') for source in policy_sources)
+    assert not any(source['role'].startswith('proposed') for source in policy_sources)
 
 
 def test_metadata_only_change_enters_classification(repo):
@@ -284,7 +285,8 @@ class GapJev(Jev):
 
     def ask(self, state, questions):
         self.calls.append((state, questions))
-        return {key: (.9 if key in ('content_task', 'pack_sales') or key.endswith('__gap') or not key.startswith('pack_')
+        return {key: (.01 if key.startswith('literal_') else
+                      .9 if key in ('content_task', 'pack_sales') or key.endswith('__gap') or not key.startswith('pack_')
                       else .01) for key in questions}
 
 
